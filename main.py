@@ -27,7 +27,7 @@ def get_product_details(url):
 
     if vendor == "luluhypermarket":
         price = soup.findAll('span', class_="item price")[0].text.split()[-1]
-        product_mass = soup.findAll('h1', class_='product-name')[0].text.split('.')[-1]
+        product_mass = soup.findAll('h1', class_='product-name')[0].text.strip().split()[-1]
         location = "kochi"
 
     elif vendor == "klfresh":
@@ -67,10 +67,8 @@ def get_product_details(url):
     return product_name,product_mass,float(price),location,vendor
 
 
-i = 0
+
 for url in urls:
-    i = i + 1
-    print(i)
     product_name, product_mass, price, location, vendor = get_product_details(url)
 
     products[product_name] = product_mass
@@ -87,12 +85,14 @@ for url in urls:
             locations[location][vendor] = {product_name:details}
 
 
+
 my_list = []
 my_list.append(['Name', 'Mass', '', 'Coimbatore', '', '', '', 'Tvm', '', '', '', '', 'Kochi', '', ''])
 my_list.append(['', '', 'BigBasket', 'JioMart', 'VegRoot', '', 'kada.in', 'amneeds', 'JioMart', '', 'BigBasket', 'JioMart','KL Fresh', 'Lulu Hypermart', 'findfresh'])
 
 
-print(my_list,'1st')
+print(products)
+
 for product_name,mass in products.items():
     my_list.append([product_name,mass,
                     # locations['coimbatore']['bigbasket'][product_name]['price'],
@@ -111,11 +111,17 @@ for product_name,mass in products.items():
                     0,
                     '',
 
-                    locations['kochi']['bigbasket'][product_name]['price'],
-                    locations['kochi']['jiomart'][product_name]['price'],
-                    locations['kochi']['klfresh'][product_name]['price'],
-                    locations['kochi']['luluhypermarket'][product_name]['price'],
-                    locations['kochi']['findfresh'][product_name]['price'],
+                    locations['kochi']['bigbasket'][product_name]['price'] if product_name in locations['kochi'][
+                        'bigbasket'] else '0',
+                    locations['kochi']['jiomart'][product_name]['price'] if product_name in locations['kochi'][
+                        'jiomart'] else '0',
+                    locations['kochi']['klfresh'][product_name]['price'] if product_name in locations['kochi'][
+                        'klfresh'] else '0',
+                    locations['kochi']['luluhypermarket'][product_name]['price'] if product_name in locations['kochi'][
+                        'luluhypermarket'] else '0',
+                    locations['kochi']['findfresh'][product_name]['price'] if product_name in locations['kochi'][
+                        'findfresh'] else '0',
+
                     ])
 
 filename = 'case_array.csv'
