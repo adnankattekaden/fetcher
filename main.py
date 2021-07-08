@@ -19,12 +19,13 @@ def get_product_details(url):
     for product_name, url in url.items():
         product_name = product_name
         url = url
+
     vendor = url.split('.')[1]
+
     request = requests.get(url)
     soup = BeautifulSoup(request.content, 'lxml')
 
     if vendor == "luluhypermarket":
-        b = soup.findAll('span', class_="item price")[0].text.split()
         price = soup.findAll('span', class_="item price")[0].text.split()[-1]
         product_mass = soup.findAll('h1', class_='product-name')[0].text.split('.')[-1]
         location = "kochi"
@@ -64,6 +65,8 @@ def get_product_details(url):
         price = '0'
 
     return product_name,product_mass,float(price),location,vendor
+
+
 i = 0
 for url in urls:
     i = i + 1
@@ -79,20 +82,21 @@ for url in urls:
 
     if location in locations:
         if vendor in locations[location]:
-            locations[location][vendor].update({product_name: details})
+            locations[location][vendor].update({product_name:details})
         else:
-            locations[location][vendor] = {product_name: details}
+            locations[location][vendor] = {product_name:details}
 
 
 my_list = []
 my_list.append(['Name', 'Mass', '', 'Coimbatore', '', '', '', 'Tvm', '', '', '', '', 'Kochi', '', ''])
 my_list.append(['', '', 'BigBasket', 'JioMart', 'VegRoot', '', 'kada.in', 'amneeds', 'JioMart', '', 'BigBasket', 'JioMart','KL Fresh', 'Lulu Hypermart', 'findfresh'])
 
-for product_name,mass in products.items():
 
+print(my_list,'1st')
+for product_name,mass in products.items():
     my_list.append([product_name,mass,
                     # locations['coimbatore']['bigbasket'][product_name]['price'],
-                     0,
+                    0,
                     # locations['coimbatore']['bigbasket'][product_name]['price'],
                     0,
                     # locations['coimbatore']['bigbasket'][product_name]['price'],
@@ -112,7 +116,6 @@ for product_name,mass in products.items():
                     locations['kochi']['klfresh'][product_name]['price'],
                     locations['kochi']['luluhypermarket'][product_name]['price'],
                     locations['kochi']['findfresh'][product_name]['price'],
-
                     ])
 
 filename = 'case_array.csv'
